@@ -1,0 +1,10 @@
+default Order dec
+
+Register_Module {
+    files reg.sail
+}
+
+SOP2_Module {
+    requires A
+    files sop2_ops.sail
+}

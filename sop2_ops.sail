@@ -1,7 +1,6 @@
 default Order dec // sets the default order
 $include <prelude.sail>
 $include <string.sail>
-$include <reg.sail>
 
 // Chapter 5
 
@@ -19,5 +18,16 @@ val decode : bits(32) -> option(ast)
 val execute : ast -> unit
 
 union clause ast = SOP2 : (bits(2), op7, sgpr_dst_bits, sgpr_src_bits, sgpr_src_bits) // defining the SOP2 constructor for ast
+
+function clause decode 0b10 @ 0b0000010 @ sdst : sgpr_dst_bits @ ssrc1 : sgpr_src_bits @ ssrc0 : sgpr_src_bits = Some(SOP2(sdst, ssrc1, ssrc0, S_ADD_I32))
+
+function clause execute (SOP2(sdst, ssrc1, ssrc0, S_ADD_I32)) = {
+    let ssrc1_val = SGPR(ssrc1);
+    let ssrc0_val = SGPR(ssrc0);
+    let result = ssrc1_val + ssrc0_val;
+    SGPR(sdst) = result
+}
+
+function clause decode _ = None()
 
 
